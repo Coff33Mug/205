@@ -1,10 +1,15 @@
+package main;
 import java.sql.Statement;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import pages.LoginPage;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Database {
 	
@@ -32,16 +37,13 @@ public class Database {
 			return c;
 		}
 		
-		/*try {
-			
-			stmt = c.createStatement();
-			ResultSet rs = stmt.executeQuery("select * from usersdb;");
-			rs.next();
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			System.exit(0);
-		}*/
+		public void closeConnection() throws SQLException {
+			c.close();
+		}
+		
+		public void launch() {
+			LoginPage LP = new LoginPage();
+			LP.Launch();
+		}
+		
 }
