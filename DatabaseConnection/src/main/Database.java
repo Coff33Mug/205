@@ -8,6 +8,7 @@ import pages.LoginPage;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -22,7 +23,7 @@ public class Database {
 				// ForName seems to throw an error when driver you're trying to access doesn't exist
 				Class.forName("org.postgresql.Driver");
 				c = DriverManager.getConnection(url, user, pass);
-				System.out.print("Connected to database");
+				System.out.println("Connected to database");
 				
 				
 			} catch (Exception e) {
@@ -31,6 +32,56 @@ public class Database {
 				System.exit(0);
 			}
 		
+		}
+		
+		public void addAdmin() throws SQLException {
+		    Statement stmt = c.createStatement();
+		    String sql = "INSERT INTO public.users(id, username, password, firstname, lastname, address, isemployee, ismanager) "
+		            + "VALUES(default, 'admin', 'admin', 'admin', 'admin', 'n/a', false, true)";
+		    stmt.executeUpdate(sql);
+		    stmt.close();
+		    c.close();
+		}
+		
+		public void addCustomer(String username, String password, String firstname, String lastname, String address) throws SQLException {
+			PreparedStatement stmt = c.prepareStatement(
+			"INSERT INTO public.users(id, username, password, firstname, lastname, address, isemployee, ismanager) VALUES(DEFAULT,?,?,?,?,?, false, false)");
+			stmt.setString(1, username);
+			stmt.setString(2, password);
+			stmt.setString(3, firstname);
+			stmt.setString(4, lastname);
+			stmt.setString(5, address);
+			stmt.executeUpdate();
+			stmt.close();
+			c.close();
+		}
+		
+		public void addEmployee(String username, String password, String firstname, String lastname) throws SQLException {
+			PreparedStatement stmt = c.prepareStatement(
+					"INSERT INTO public.users(id, username, password, firstname, lastname, address, isemployee, ismanager) VALUES(DEFAULT,?,?,?,?, 'n/a', true, false)");
+					stmt.setString(1, username);
+					stmt.setString(2, password);
+					stmt.setString(3, firstname);
+					stmt.setString(4, lastname);
+					stmt.executeUpdate();
+					stmt.close();
+					c.close();
+		}
+		
+		public void createTable() throws SQLException {
+			Statement stmt = c.createStatement();
+		    String sql = "CREATE TABLE users (" +
+		                 "ID serial PRIMARY KEY," +
+		                 "username TEXT NOT NULL," +
+		                 "password TEXT NOT NULL," +
+		                 "firstname TEXT NOT NULL," +
+		                 "lastname TEXT NOT NULL," +
+		                 "address TEXT NOT NULL," +
+		                 "isemployee boolean default false," +
+		                 "ismanager boolean default false)";
+		    stmt.executeUpdate(sql);
+		    stmt.close();
+		    c.close();
 		}
 		
 		public Connection getConnection() {

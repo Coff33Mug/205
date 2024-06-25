@@ -100,9 +100,9 @@ public class LoginPage {
 						boolean isEmployee = rs.getBoolean("isemployee");
 						boolean isManager = rs.getBoolean("isManager");
 						
+						System.out.print(isEmployee + " " + isManager);
 						
-						if (username.equals(inputUsername) && password.equals(inputPassword)) {
-							System.out.print(username.equals(inputUsername) && password.equals(inputPassword));
+						if (username.equals(inputUsername) && password.equals(inputPassword)) {				
 							ShoppingPage SP = new ShoppingPage();
 							SP.ShoppingPage.setVisible(true);
 							LoginPage.dispose();
