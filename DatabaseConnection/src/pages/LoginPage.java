@@ -22,6 +22,8 @@ import java.awt.SystemColor;
 public class LoginPage {
 
 	public JFrame LoginPage;
+	public JLabel AccountCreationLabel;
+	private int userID;
 	private JTextField userInput;
 	private JTextField passInput;
 
@@ -47,6 +49,10 @@ public class LoginPage {
 	public LoginPage() {
 		initialize();
 	}
+	
+	public int getID() {
+		return userID;
+	}
 
 	/**
 	 * Initialize the contents of the frame.
@@ -69,6 +75,13 @@ public class LoginPage {
 		passInput.setColumns(10);
 		passInput.setBounds(21, 169, 493, 45);
 		LoginPage.getContentPane().add(passInput);
+		
+		AccountCreationLabel = new JLabel();
+		AccountCreationLabel.setBounds(158, 363, 670, 106);
+		AccountCreationLabel.setForeground(SystemColor.menu);
+		AccountCreationLabel.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		LoginPage.getContentPane().add(AccountCreationLabel);
+		
 				
 		
 		
@@ -88,11 +101,11 @@ public class LoginPage {
 				db.Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
 				IncorrectLabel.setForeground(SystemColor.menu);
 				String inputUsername = userInput.getText();
-				String inputPassword = userInput.getText();
+				String inputPassword = passInput.getText();
 				
 				try {
 					Statement stmt = db.getConnection().createStatement();
-					ResultSet rs = stmt.executeQuery("select username, password, isemployee, ismanager from public.users;");
+					ResultSet rs = stmt.executeQuery("select id, username, password, isemployee, ismanager from public.users;");
 					
 					while (rs.next()) {
 						String username = rs.getString("username");
@@ -100,13 +113,24 @@ public class LoginPage {
 						boolean isEmployee = rs.getBoolean("isemployee");
 						boolean isManager = rs.getBoolean("isManager");
 						
-						System.out.print(isEmployee + " " + isManager);
 						
-						if (username.equals(inputUsername) && password.equals(inputPassword)) {				
-							ShoppingPage SP = new ShoppingPage();
-							SP.ShoppingPage.setVisible(true);
-							LoginPage.dispose();
-							break;
+						if (username.equals(inputUsername) && password.equals(inputPassword)) {	
+							
+							if (isManager == true) {
+								userID = rs.getInt("ID");
+								ManagerPage MP = new ManagerPage();
+								MP.ManagerPage.setVisible(true);
+								LoginPage.dispose();
+							} else {
+								userID = rs.getInt("ID");
+								ShoppingPage SP = new ShoppingPage();
+								SP.ShoppingPage.setVisible(true);
+								SP.ManagerPageButton.setVisible(false);
+								LoginPage.dispose();
+								break;
+							}
+							
+							
 						}
 					}
 					

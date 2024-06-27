@@ -1,9 +1,15 @@
 package pages;
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import java.awt.Font;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -11,22 +17,23 @@ import java.awt.event.ActionEvent;
 public class ShoppingPage {
 
 	public JFrame ShoppingPage;
+	public JButton ManagerPageButton;
 
 	/**
 	 * Launch the application.
 	 */
-	/*public static void main(String[] args) {
+	public void Launch() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					ShoppingPage window = new ShoppingPage();
-					window.frame.setVisible(true);
+					window.ShoppingPage.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-	}*/
+	}
 
 	/**
 	 * Create the application.
@@ -34,6 +41,7 @@ public class ShoppingPage {
 	public ShoppingPage() {
 		initialize();
 	}
+	
 
 	/**
 	 * Initialize the contents of the frame.
@@ -46,7 +54,7 @@ public class ShoppingPage {
 		
 		JLabel lblNewLabel = new JLabel("Shopping Page");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 47));
-		lblNewLabel.setBounds(64, 43, 500, 90);
+		lblNewLabel.setBounds(10, -4, 500, 90);
 		ShoppingPage.getContentPane().add(lblNewLabel);
 		
 		JButton logoutButton = new JButton("Logout");
@@ -59,5 +67,19 @@ public class ShoppingPage {
 		});
 		logoutButton.setBounds(885, 11, 89, 23);
 		ShoppingPage.getContentPane().add(logoutButton);
+		
+		ManagerPageButton = new JButton("Manage");
+		ManagerPageButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ManagerPage MP = new ManagerPage();
+				MP.ManagerPage.setVisible(true);
+				ShoppingPage.dispose();
+			}
+		});
+		ManagerPageButton.setBounds(885, 45, 89, 23);
+		ShoppingPage.getContentPane().add(ManagerPageButton);
+		
+		
+		
 	}
 }

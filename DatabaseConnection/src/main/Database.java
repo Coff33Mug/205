@@ -34,7 +34,10 @@ public class Database {
 		
 		}
 		
+		
+		// For all add methods, deleted IDs do not exist anymore in database.
 		public void addAdmin() throws SQLException {
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
 		    Statement stmt = c.createStatement();
 		    String sql = "INSERT INTO public.users(id, username, password, firstname, lastname, address, isemployee, ismanager) "
 		            + "VALUES(default, 'admin', 'admin', 'admin', 'admin', 'n/a', false, true)";
@@ -44,6 +47,7 @@ public class Database {
 		}
 		
 		public void addCustomer(String username, String password, String firstname, String lastname, String address) throws SQLException {
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
 			PreparedStatement stmt = c.prepareStatement(
 			"INSERT INTO public.users(id, username, password, firstname, lastname, address, isemployee, ismanager) VALUES(DEFAULT,?,?,?,?,?, false, false)");
 			stmt.setString(1, username);
@@ -57,6 +61,7 @@ public class Database {
 		}
 		
 		public void addEmployee(String username, String password, String firstname, String lastname) throws SQLException {
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
 			PreparedStatement stmt = c.prepareStatement(
 					"INSERT INTO public.users(id, username, password, firstname, lastname, address, isemployee, ismanager) VALUES(DEFAULT,?,?,?,?, 'n/a', true, false)");
 					stmt.setString(1, username);
@@ -69,6 +74,7 @@ public class Database {
 		}
 		
 		public void createTable() throws SQLException {
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
 			Statement stmt = c.createStatement();
 		    String sql = "CREATE TABLE users (" +
 		                 "ID serial PRIMARY KEY," +
