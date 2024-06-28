@@ -59,7 +59,7 @@ public class ManagerPage {
 				ManagerPage.dispose();
 			}
 		});
-		logoutButton.setBounds(23, 179, 156, 40);
+		logoutButton.setBounds(23, 242, 156, 40);
 		ManagerPage.getContentPane().add(logoutButton);
 		
 		JButton ShoppingPageButton = new JButton("Shopping page");
@@ -74,5 +74,17 @@ public class ManagerPage {
 		ShoppingPageButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		ShoppingPageButton.setBounds(23, 117, 156, 40);
 		ManagerPage.getContentPane().add(ShoppingPageButton);
+		
+		JButton CreateAccountButton = new JButton("Create account");
+		CreateAccountButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ManagerRegisterPage MRP = new ManagerRegisterPage();
+				MRP.ManagerRegisterPage.setVisible(true);
+				ManagerPage.dispose();
+			}
+		});
+		CreateAccountButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		CreateAccountButton.setBounds(23, 179, 156, 40);
+		ManagerPage.getContentPane().add(CreateAccountButton);
 	}
 }

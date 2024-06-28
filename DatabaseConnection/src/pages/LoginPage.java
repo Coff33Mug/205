@@ -65,6 +65,7 @@ public class LoginPage {
 		
 		// User inputs
 		userInput = new JTextField();
+		userInput.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		userInput.setBounds(21, 63, 493, 45);
 		LoginPage.getContentPane().add(userInput);
 		userInput.setColumns(10);
@@ -72,6 +73,7 @@ public class LoginPage {
 		
 				
 		passInput = new JTextField();
+		passInput.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		passInput.setColumns(10);
 		passInput.setBounds(21, 169, 493, 45);
 		LoginPage.getContentPane().add(passInput);

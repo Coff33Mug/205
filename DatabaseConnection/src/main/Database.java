@@ -76,15 +76,10 @@ public class Database {
 		public void createTable() throws SQLException {
 			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
 			Statement stmt = c.createStatement();
-		    String sql = "CREATE TABLE users (" +
+		    String sql = "CREATE TABLE items (" +
 		                 "ID serial PRIMARY KEY," +
-		                 "username TEXT NOT NULL," +
-		                 "password TEXT NOT NULL," +
-		                 "firstname TEXT NOT NULL," +
-		                 "lastname TEXT NOT NULL," +
-		                 "address TEXT NOT NULL," +
-		                 "isemployee boolean default false," +
-		                 "ismanager boolean default false)";
+		                 "name TEXT NOT NULL," +
+		                 "price DOUBLE PRECISION)";
 		    stmt.executeUpdate(sql);
 		    stmt.close();
 		    c.close();
@@ -101,6 +96,125 @@ public class Database {
 		public void launch() {
 			LoginPage LP = new LoginPage();
 			LP.Launch();
+		}
+		
+		// Item adding and modifications
+		public void addItem(String InputName, double InputPrice) throws SQLException {
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
+			PreparedStatement stmt = c.prepareStatement(
+					"INSERT INTO public.items(id, name, price) VALUES(DEFAULT,?,?)");
+					stmt.setString(1, InputName);
+					stmt.setDouble(2, InputPrice);
+					stmt.executeUpdate();
+					System.out.print("Added item");
+					stmt.close();
+					c.close();
+		}
+		
+		
+		
+		public void deleteItem(String InputName, int InputID) throws SQLException {
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
+		    Statement stmt = getConnection().createStatement();
+		    ResultSet rs = stmt.executeQuery("SELECT id, name FROM public.items;");
+
+		    while (rs.next()) {
+		        int DatabaseID = rs.getInt("id");
+		        String Name = rs.getString("name");
+		        
+		        if (DatabaseID == InputID || InputName.toLowerCase().equals(Name)) {
+		            PreparedStatement prestmt = getConnection().prepareStatement("DELETE FROM public.items WHERE id =? OR name =?");
+		            prestmt.setInt(1, InputID);
+		            prestmt.setString(2, InputName);
+		            prestmt.executeUpdate();
+		            System.out.print("Item Deleted");
+		            break;
+		        } else {
+		            System.out.print("Could not find item");
+		        }
+		    }
+		    stmt.close();
+		    getConnection().close();
+		}
+		
+		public double getItemPrice(String InputName, int InputID) {
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
+			try {
+				Statement stmt = getConnection().createStatement();
+				ResultSet rs = stmt.executeQuery("select id, name, price from public.items;");
+				
+				while (rs.next()) {
+					int DatabaseID = rs.getInt("id");
+					double Price = rs.getDouble("price");
+					String Name = rs.getString("name");
+					
+					if (InputName.toLowerCase().equals(Name) || InputID == DatabaseID) {
+						stmt.close();
+					    c.close();
+						return Price;
+					}
+				}
+				
+				
+			} catch (SQLException e1) {
+				System.out.print("item not found");
+				e1.printStackTrace();
+				return -1;
+			}
+			
+			return -1;
+		}
+		
+		public String getItemName(int InputID) {
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
+			try {
+				Statement stmt = getConnection().createStatement();
+				ResultSet rs = stmt.executeQuery("select id, name from public.items;");
+				
+				while (rs.next()) {
+					int DatabaseID = rs.getInt("id");
+					String name = rs.getString("name");
+					if (InputID == DatabaseID) {
+						stmt.close();
+					    c.close();
+						return name;
+					}
+				}
+				
+				
+			} catch (SQLException e1) {
+				System.out.print("item not found");
+				e1.printStackTrace();
+				return "";
+			}
+			
+			return "";
+		}
+		
+		public int getItemID(String InputName) {
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
+			try {
+				Statement stmt = getConnection().createStatement();
+				ResultSet rs = stmt.executeQuery("select id, name from public.items;");
+				
+				while (rs.next()) {
+					int DatabaseID = rs.getInt("id");
+					String name = rs.getString("name");
+					if (InputName.toLowerCase().equals(name)) {
+						stmt.close();
+					    c.close();
+						return DatabaseID;
+					}
+				}
+				
+				
+			} catch (SQLException e1) {
+				System.out.print("item not found");
+				e1.printStackTrace();
+				return -1;
+			}
+			
+			return -1;
 		}
 		
 }

@@ -13,6 +13,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JToggleButton;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 
 public class ShoppingPage {
 
@@ -78,6 +81,8 @@ public class ShoppingPage {
 		});
 		ManagerPageButton.setBounds(885, 45, 89, 23);
 		ShoppingPage.getContentPane().add(ManagerPageButton);
+		
+		
 		
 		
 		
