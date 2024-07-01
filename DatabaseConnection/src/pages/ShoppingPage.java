@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JToggleButton;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 public class ShoppingPage {
 

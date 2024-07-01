@@ -177,5 +177,6 @@ public class LoginPage {
 		LoginPage.getContentPane().add(lblPassword);
 		
 		
+		
 	}
 }

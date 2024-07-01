@@ -76,9 +76,11 @@ public class Database {
 		public void createTable() throws SQLException {
 			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
 			Statement stmt = c.createStatement();
-		    String sql = "CREATE TABLE items (" +
-		                 "ID serial PRIMARY KEY," +
-		                 "name TEXT NOT NULL," +
+		    String sql = "CREATE TABLE checkout (" +
+		                 "orderID serial PRIMARY KEY," +
+		                 "userID int not null," +
+		                 "itemname TEXT NOT NULL," +
+		                 "quantity int not null," +
 		                 "price DOUBLE PRECISION)";
 		    stmt.executeUpdate(sql);
 		    stmt.close();
@@ -98,7 +100,7 @@ public class Database {
 			LP.Launch();
 		}
 		
-		// Item adding and modifications
+		// Item adding and modifications to items database
 		public void addItem(String InputName, double InputPrice) throws SQLException {
 			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
 			PreparedStatement stmt = c.prepareStatement(
@@ -165,6 +167,36 @@ public class Database {
 			return -1;
 		}
 		
+		public void updateItemPrice(String InputName, int InputID, double InputPrice) {
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
+			try {
+				Statement stmt = getConnection().createStatement();
+				ResultSet rs = stmt.executeQuery("select id, name, price from public.items;");
+				
+				while (rs.next()) {
+					int DatabaseID = rs.getInt("id");
+					double Price = rs.getDouble("price");
+					String Name = rs.getString("name");
+					
+					if (InputName.toLowerCase().equals(Name) || InputID == DatabaseID) {
+						PreparedStatement prestmt = getConnection().prepareStatement("UPDATE public.items SET price =? WHERE id =? OR name =?");
+						prestmt.setDouble(1, InputPrice);
+						prestmt.setInt(2, DatabaseID);
+						prestmt.setString(3, Name);
+						prestmt.executeUpdate();
+						System.out.print("item price updated");
+						break;
+					}
+				}
+				
+				
+			} catch (SQLException e1) {
+				System.out.print("item not found");
+				e1.printStackTrace();
+			}
+		}
+		
+		
 		public String getItemName(int InputID) {
 			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
 			try {
@@ -217,4 +249,139 @@ public class Database {
 			return -1;
 		}
 		
+		// Checkout item modifications
+		public void checkoutAddItem(String inputItemName, int inputQuantity, int inputItemID) {
+			LoginPage LP = new LoginPage();
+			int userID = LP.getID();
+			
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
+			try {
+				Statement stmt = getConnection().createStatement();
+				ResultSet rs = stmt.executeQuery("select id, name, price from public.items;");
+				
+				while (rs.next()) {
+					int itemID = rs.getInt("id");
+					String name = rs.getString("name");
+					double price = rs.getDouble("price");
+					
+					if (inputItemName.toLowerCase().equals(name) || inputItemID == itemID) {
+						PreparedStatement prestmt = c.prepareStatement(
+								"INSERT INTO public.checkout(orderid, userid, itemname, quantity, price) VALUES(DEFAULT,?,?,?,?)");
+						prestmt.setInt(1, userID);
+						prestmt.setString(2, name);
+						prestmt.setInt(3, inputQuantity);
+						prestmt.setDouble(4, price * inputQuantity);
+						prestmt.executeUpdate();
+						System.out.print("Added item");
+						stmt.close();
+						c.close();
+						break;
+					}
+				}
+				
+				
+			} catch (SQLException e1) {
+				System.out.print("item not found");
+				e1.printStackTrace();
+				
+			}
+		}
+		
+		public void checkoutDeleteItem(int inputUserID, int inputOrderID) {
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
+			try {
+		    Statement stmt = getConnection().createStatement();
+		    ResultSet rs = stmt.executeQuery("SELECT orderid, userid FROM public.checkout;");
+
+		    while (rs.next()) {
+		        int databaseOrderID = rs.getInt("orderid");
+		        int databaseUserID = rs.getInt("userid");
+		        
+		        if (inputUserID == databaseUserID || databaseOrderID == inputOrderID) {
+		            PreparedStatement prestmt = getConnection().prepareStatement("DELETE FROM public.checkout WHERE orderid =? OR userid =?");
+		            prestmt.setInt(1, databaseOrderID);
+		            prestmt.setInt(2, databaseUserID);
+		            prestmt.executeUpdate();
+		            System.out.print("Item Deleted");
+		            break;
+		        	}
+		    	}
+			} catch (SQLException e1) {
+				System.out.print("item not found");
+				e1.printStackTrace();
+			}
+			
+		}
+		
+		public void checkoutUpdateItemQuantity(int inputUserID, int inputOrderID, int inputQuantity) {
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
+			try {
+		    Statement stmt = getConnection().createStatement();
+		    ResultSet rs = stmt.executeQuery("SELECT orderid, userid, itemname FROM public.checkout;");
+
+		    while (rs.next()) {
+		        int databaseOrderID = rs.getInt("orderid");
+		        int databaseUserID = rs.getInt("userid");
+		        String databaseItemName = rs.getString("itemname");
+		        
+		        if (inputUserID == databaseUserID || databaseOrderID == inputOrderID) {
+		            PreparedStatement prestmt = getConnection().prepareStatement("UPDATE public.checkout SET quantity =?, price =? WHERE orderid =? OR userid =?");
+		            prestmt.setInt(1, inputQuantity);
+		            // Second parameter of getItemPrice is 0 because databaseItemName should be correct
+		            // making another ID unnecessary
+		            prestmt.setDouble(2, inputQuantity * getItemPrice(databaseItemName, 0));
+		            prestmt.setInt(3, databaseOrderID);
+		            prestmt.setInt(4, databaseUserID);
+		            prestmt.executeUpdate();
+		            System.out.print("Item quantity updated");
+		            break;
+		        	}
+		    	}
+			} catch (SQLException e1) {
+				System.out.print("item not found");
+				e1.printStackTrace();
+			}
+		}
+		
+		public int getCheckoutCount(int inputUserID) {
+			int count = 0;
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
+			try {
+		    Statement stmt = getConnection().createStatement();
+		    ResultSet rs = stmt.executeQuery("SELECT userid FROM public.checkout;");
+
+		    while (rs.next()) {
+		        int databaseUserID = rs.getInt("userid");
+		        
+		        if (inputUserID == databaseUserID) {
+		            	count++;
+		        	}
+		    	}
+			} catch (SQLException e1) {
+				System.out.print("item not found");
+				e1.printStackTrace();
+			}
+			return count;
+		}
+		
+		public double getCheckoutTotalPrice(int inputUserID) {
+			double totalPrice = 0;
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
+			try {
+		    Statement stmt = getConnection().createStatement();
+		    ResultSet rs = stmt.executeQuery("SELECT userid, price FROM public.checkout;");
+
+		    while (rs.next()) {
+		        int databaseUserID = rs.getInt("userid");
+		        double databasePrice = rs.getDouble("price");
+		        if (inputUserID == databaseUserID) {
+		            	totalPrice += databasePrice;
+		        	}
+		    	}
+			} catch (SQLException e1) {
+				System.out.print("item not found");
+				e1.printStackTrace();
+			}
+			return totalPrice;
+		}
 }
