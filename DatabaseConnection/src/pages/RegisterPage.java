@@ -26,7 +26,7 @@ public class RegisterPage {
 	private JTextField PasswordInput;
 	private JTextField LastNameInput;
 	private JTextField AddressInput;
-
+	Database DB = Database.getInstance();
 	/**
 	 * Launch the application.
 	 */
@@ -146,10 +146,10 @@ public class RegisterPage {
 		ConfirmButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (PasswordInput.getText().length() > 3) {
-					Database DP = new Database();
+					
 					try {
 						// Adds customer and notifies them that account was made.
-						DP.addCustomer(UsernameInput.getText(), PasswordInput.getText(), FirstNameInput.getText(), LastNameInput.getText(), AddressInput.getText());
+						DB.addCustomer(UsernameInput.getText(), PasswordInput.getText(), FirstNameInput.getText(), LastNameInput.getText(), AddressInput.getText());
 						
 						// Moves to login page
 						LoginPage LP = new LoginPage();

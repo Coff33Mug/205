@@ -15,7 +15,9 @@ import java.sql.SQLException;
 public class Database {
 	
 		// Objects and variables
+		private int userID;
 		// SQL variables
+		private static Database instance;
 		private Connection c = null;
 		
 		public void Connect(String url, String user, String pass) {
@@ -33,6 +35,15 @@ public class Database {
 			}
 		
 		}
+		
+		// Makes sure that only one database instance is created and referenced.
+		public static synchronized Database getInstance() {
+			if (instance == null) {
+				instance = new Database();
+			} 
+			return instance;
+		}
+		
 		
 		
 		// For all add methods, deleted IDs do not exist anymore in database.
@@ -98,6 +109,15 @@ public class Database {
 		public void launch() {
 			LoginPage LP = new LoginPage();
 			LP.Launch();
+		}
+		
+		// Get and set UserID
+		public int getUserID() {
+			return userID;
+		}
+		
+		public void setUserID(int inputUserID) {
+			userID = inputUserID;
 		}
 		
 		// Item adding and modifications to items database
@@ -251,8 +271,6 @@ public class Database {
 		
 		// Checkout item modifications
 		public void checkoutAddItem(String inputItemName, int inputQuantity, int inputItemID) {
-			LoginPage LP = new LoginPage();
-			int userID = LP.getID();
 			
 			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
 			try {

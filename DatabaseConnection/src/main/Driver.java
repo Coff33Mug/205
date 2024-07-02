@@ -9,6 +9,7 @@ public class Driver {
 		LoginPage LP = new LoginPage();
 		
 		LP.Launch();
+		
 	}
 
 }

@@ -26,6 +26,7 @@ public class LoginPage {
 	private int userID;
 	private JTextField userInput;
 	private JTextField passInput;
+	Database DB = Database.getInstance();
 
 	/**
 	 * Launch the application.
@@ -50,8 +51,8 @@ public class LoginPage {
 		initialize();
 	}
 	
-	public int getID() {
-		return userID;
+	public void updateID() {
+		DB.setUserID(userID);
 	}
 
 	/**
@@ -99,14 +100,14 @@ public class LoginPage {
 			
 			// Checks database for information of login
 			public void actionPerformed(ActionEvent e) {
-				Database db = new Database();
-				db.Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
+				
+				DB.Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
 				IncorrectLabel.setForeground(SystemColor.menu);
 				String inputUsername = userInput.getText();
 				String inputPassword = passInput.getText();
 				
 				try {
-					Statement stmt = db.getConnection().createStatement();
+					Statement stmt = DB.getConnection().createStatement();
 					ResultSet rs = stmt.executeQuery("select id, username, password, isemployee, ismanager from public.users;");
 					
 					while (rs.next()) {
@@ -119,11 +120,14 @@ public class LoginPage {
 						if (username.equals(inputUsername) && password.equals(inputPassword)) {	
 							
 							if (isManager == true) {
-								userID = rs.getInt("ID");
+								DB.setUserID(rs.getInt("ID"));
+								//userID = rs.getInt("ID");
+								//updateID();
 								ManagerPage MP = new ManagerPage();
 								MP.ManagerPage.setVisible(true);
 								LoginPage.dispose();
 							} else {
+								DB.setUserID(rs.getInt("ID"));
 								userID = rs.getInt("ID");
 								ShoppingPage SP = new ShoppingPage();
 								SP.ShoppingPage.setVisible(true);
@@ -138,7 +142,7 @@ public class LoginPage {
 					
 					IncorrectLabel.setForeground(Color.RED);
 					stmt.close();
-					db.closeConnection();
+					DB.closeConnection();
 					
 				} catch (SQLException e1) {
 					e1.printStackTrace();
