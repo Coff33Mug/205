@@ -126,6 +126,10 @@ public class LoginPage {
 								ManagerPage MP = new ManagerPage();
 								MP.ManagerPage.setVisible(true);
 								LoginPage.dispose();
+							} else if (isEmployee == true) {
+								EmployeePage EP = new EmployeePage();
+								EP.employeePage.setVisible(true);
+								LoginPage.dispose();
 							} else {
 								DB.setUserID(rs.getInt("ID"));
 								userID = rs.getInt("ID");

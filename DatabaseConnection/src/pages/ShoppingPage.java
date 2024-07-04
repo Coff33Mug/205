@@ -59,6 +59,10 @@ public class ShoppingPage {
     /**
      * Create the application.
      */
+    
+    /**
+     * @wbp.parser.entryPoint
+     */
     public ShoppingPage() {
     	
     	DB.Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
@@ -81,7 +85,37 @@ public class ShoppingPage {
 			e.printStackTrace();
 		}
 		
+		try {
+			Statement stmt = DB.getConnection().createStatement();
+			int databaseID = DB.getUserID();
+				
+			if (databaseID == DB.getUserID()) {
+				ResultSet CheckoutRS = stmt.executeQuery("SELECT itemname, quantity, price FROM public.checkout WHERE userID = " + databaseID + ";");
+				while (CheckoutRS.next()) {
+					String itemName = CheckoutRS.getString("itemname");
+					int quantity = CheckoutRS.getInt("quantity");
+					double price = CheckoutRS.getDouble("price");
+					cart.add(new Item(itemName, quantity, price, DB.getItemID(itemName)));
+				}
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Cart list error.");
+			e.printStackTrace();
+		}
         
+        initialize();
+    }
+    
+    public ShoppingPage(List<Item> cart) {
+        items = new ArrayList<>();
+        this.cart = cart;
+
+        for (int i = 0; i < cart.size(); i++) {
+        	items.add(new Item(cart.get(i).getName(), 1, cart.get(i).getPrice(), cart.get(i).getID()));
+        }
+        
+
         initialize();
     }
 
@@ -171,22 +205,16 @@ public class ShoppingPage {
         ShoppingPage.getContentPane().add(cartScrollPane);
 
         cartList = new JList<>(cart.toArray(new Item[0]));
+        
         cartScrollPane.setViewportView(cartList);
-
-        JButton viewCartButton = new JButton("View Cart");
-        viewCartButton.setBounds(350, 450, 100, 25);
-        viewCartButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                viewCart();
-            }
-        });
-        ShoppingPage.getContentPane().add(viewCartButton);
 
         JButton checkoutButton = new JButton("Checkout");
         checkoutButton.setBounds(460, 450, 100, 25);
         checkoutButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                checkout();
+            	CheckoutPage checkoutPage = new CheckoutPage(cart);
+                checkoutPage.CheckoutPage.setVisible(true);
+                ShoppingPage.dispose();
             }
         });
         ShoppingPage.getContentPane().add(checkoutButton);
@@ -237,22 +265,20 @@ public class ShoppingPage {
         }
     }
 
-    private void viewCart() {
-        cartList.setListData(cart.toArray(new Item[0]));
-        JOptionPane.showMessageDialog(ShoppingPage, "Viewing cart!");
-    }
-
+    // Might become unused.
     private void checkout() {
     	
         if (cart.isEmpty()) {
             JOptionPane.showMessageDialog(ShoppingPage, "Cart is empty!");
         } else {
             int totalItems = 0;
+            int totalPrice = 0;
             for (Item item : cart) {
                 totalItems += item.getQuantity();
+                totalPrice += item.getPrice();
                 DB.checkoutAddItem(item.getName(), item.getQuantity(), item.getID());
             }
-            JOptionPane.showMessageDialog(ShoppingPage, "Your order for " + totalItems + " items was completed successfully.");
+            JOptionPane.showMessageDialog(ShoppingPage, "Your order for " + totalItems + " items was completed for " + totalPrice);
             cart.clear();
             cartList.setListData(cart.toArray(new Item[0]));
         }

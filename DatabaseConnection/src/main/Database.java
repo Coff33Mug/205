@@ -92,7 +92,9 @@ public class Database {
 		                 "userID int not null," +
 		                 "itemname TEXT NOT NULL," +
 		                 "quantity int not null," +
-		                 "price DOUBLE PRECISION)";
+		                 "price DOUBLE PRECISION," + 
+		                 "orderfilled boolean)";
+		    
 		    stmt.executeUpdate(sql);
 		    stmt.close();
 		    c.close();
@@ -284,7 +286,7 @@ public class Database {
 					
 					if (inputItemName.toLowerCase().equals(name) || inputItemID == itemID) {
 						PreparedStatement prestmt = c.prepareStatement(
-								"INSERT INTO public.checkout(orderid, userid, itemname, quantity, price) VALUES(DEFAULT,?,?,?,?)");
+								"INSERT INTO public.checkout(orderid, userid, itemname, quantity, price, orderfilled) VALUES(DEFAULT,?,?,?,?, false)");
 						prestmt.setInt(1, userID);
 						prestmt.setString(2, name);
 						prestmt.setInt(3, inputQuantity);

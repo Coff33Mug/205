@@ -1,17 +1,17 @@
 package pages;
 
 import java.awt.EventQueue;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ManagerPage {
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
-	public JFrame ManagerPage;
+public class EmployeePage {
+
+	public JFrame employeePage;
 
 	/**
 	 * Launch the application.
@@ -20,8 +20,8 @@ public class ManagerPage {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ManagerPage window = new ManagerPage();
-					window.ManagerPage.setVisible(true);
+					EmployeePage window = new EmployeePage();
+					window.employeePage.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -32,7 +32,7 @@ public class ManagerPage {
 	/**
 	 * Create the application.
 	 */
-	public ManagerPage() {
+	public EmployeePage() {
 		initialize();
 	}
 
@@ -40,15 +40,15 @@ public class ManagerPage {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		ManagerPage = new JFrame();
-		ManagerPage.setBounds(100, 100, 300, 450);
-		ManagerPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		ManagerPage.getContentPane().setLayout(null);
+		employeePage = new JFrame();
+		employeePage.setBounds(100, 100, 300, 450);
+		employeePage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		employeePage.getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Manager Menu");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		lblNewLabel.setBounds(23, 23, 212, 69);
-		ManagerPage.getContentPane().add(lblNewLabel);
+		employeePage.getContentPane().add(lblNewLabel);
 		
 		JButton logoutButton = new JButton("Logout");
 		logoutButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
@@ -56,11 +56,11 @@ public class ManagerPage {
 			public void actionPerformed(ActionEvent e) {
 				LoginPage LP = new LoginPage();
 				LP.LoginPage.setVisible(true);
-				ManagerPage.dispose();
+				employeePage.dispose();
 			}
 		});
-		logoutButton.setBounds(23, 301, 156, 40);
-		ManagerPage.getContentPane().add(logoutButton);
+		logoutButton.setBounds(23, 239, 156, 40);
+		employeePage.getContentPane().add(logoutButton);
 		
 		JButton ShoppingPageButton = new JButton("Shopping page");
 		ShoppingPageButton.addActionListener(new ActionListener() {
@@ -68,35 +68,24 @@ public class ManagerPage {
 				ShoppingPage SP = new ShoppingPage();
 				SP.ShoppingPage.setVisible(true);
 				SP.ManagerPageButton.setVisible(true);
-				ManagerPage.dispose();
+				employeePage.dispose();
 			}
 		});
 		ShoppingPageButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		ShoppingPageButton.setBounds(23, 117, 156, 40);
-		ManagerPage.getContentPane().add(ShoppingPageButton);
-		
-		JButton CreateAccountButton = new JButton("Create account");
-		CreateAccountButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ManagerRegisterPage MRP = new ManagerRegisterPage();
-				MRP.ManagerRegisterPage.setVisible(true);
-				ManagerPage.dispose();
-			}
-		});
-		CreateAccountButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		CreateAccountButton.setBounds(23, 179, 156, 40);
-		ManagerPage.getContentPane().add(CreateAccountButton);
+		employeePage.getContentPane().add(ShoppingPageButton);
 		
 		JButton modifyItemsButton = new JButton("Modify items");
 		modifyItemsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EmpItemPage EP = new EmpItemPage();
 				EP.EmpItemPage.setVisible(true);
-				ManagerPage.dispose();
+				employeePage.dispose();
 			}
 		});
 		modifyItemsButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		modifyItemsButton.setBounds(23, 239, 156, 40);
-		ManagerPage.getContentPane().add(modifyItemsButton);
+		modifyItemsButton.setBounds(23, 179, 156, 40);
+		employeePage.getContentPane().add(modifyItemsButton);
 	}
+
 }
