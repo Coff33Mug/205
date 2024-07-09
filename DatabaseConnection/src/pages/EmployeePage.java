@@ -45,9 +45,9 @@ public class EmployeePage {
 		employeePage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		employeePage.getContentPane().setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Manager Menu");
+		JLabel lblNewLabel = new JLabel("Employee Menu");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 32));
-		lblNewLabel.setBounds(23, 23, 212, 69);
+		lblNewLabel.setBounds(23, 23, 251, 69);
 		employeePage.getContentPane().add(lblNewLabel);
 		
 		JButton logoutButton = new JButton("Logout");
@@ -59,7 +59,7 @@ public class EmployeePage {
 				employeePage.dispose();
 			}
 		});
-		logoutButton.setBounds(23, 239, 156, 40);
+		logoutButton.setBounds(23, 294, 156, 40);
 		employeePage.getContentPane().add(logoutButton);
 		
 		JButton ShoppingPageButton = new JButton("Shopping page");

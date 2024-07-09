@@ -103,6 +103,13 @@ public class ShoppingPage {
 			System.out.println("Cart list error.");
 			e.printStackTrace();
 		}
+		// Disconnect connection
+        try {
+			DB.getConnection().close();
+		} catch (SQLException e) {
+			System.out.print("Connection could not be closed");
+			e.printStackTrace();
+		}
         
         initialize();
     }
@@ -185,9 +192,15 @@ public class ShoppingPage {
         });
         ShoppingPage.getContentPane().add(addButton);
 
+        // Jlist and JScrollpanels
+        
         JLabel lblItems = new JLabel("Items:");
         lblItems.setBounds(10, 200, 50, 25);
         ShoppingPage.getContentPane().add(lblItems);
+        
+        JLabel lblCart = new JLabel("Cart:");
+        lblCart.setBounds(350, 200, 50, 25);
+        ShoppingPage.getContentPane().add(lblCart);
 
         JScrollPane itemScrollPane = new JScrollPane();
         itemScrollPane.setBounds(10, 230, 310, 200);
@@ -196,18 +209,15 @@ public class ShoppingPage {
         itemList = new JList<>(items.toArray(new Item[0]));
         itemScrollPane.setViewportView(itemList);
 
-        JLabel lblCart = new JLabel("Cart:");
-        lblCart.setBounds(350, 200, 50, 25);
-        ShoppingPage.getContentPane().add(lblCart);
-
         JScrollPane cartScrollPane = new JScrollPane();
         cartScrollPane.setBounds(350, 230, 310, 200);
         ShoppingPage.getContentPane().add(cartScrollPane);
 
         cartList = new JList<>(cart.toArray(new Item[0]));
-        
         cartScrollPane.setViewportView(cartList);
 
+        
+        
         JButton checkoutButton = new JButton("Checkout");
         checkoutButton.setBounds(460, 450, 100, 25);
         checkoutButton.addActionListener(new ActionListener() {

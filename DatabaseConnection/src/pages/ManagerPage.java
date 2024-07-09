@@ -59,7 +59,7 @@ public class ManagerPage {
 				ManagerPage.dispose();
 			}
 		});
-		logoutButton.setBounds(23, 301, 156, 40);
+		logoutButton.setBounds(23, 349, 156, 40);
 		ManagerPage.getContentPane().add(logoutButton);
 		
 		JButton ShoppingPageButton = new JButton("Shopping page");
