@@ -41,7 +41,7 @@ public class ManagerPage {
 	 */
 	private void initialize() {
 		ManagerPage = new JFrame();
-		ManagerPage.setBounds(100, 100, 300, 450);
+		ManagerPage.setBounds(100, 100, 300, 500);
 		ManagerPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		ManagerPage.getContentPane().setLayout(null);
 		
@@ -59,7 +59,7 @@ public class ManagerPage {
 				ManagerPage.dispose();
 			}
 		});
-		logoutButton.setBounds(23, 349, 156, 40);
+		logoutButton.setBounds(23, 360, 156, 40);
 		ManagerPage.getContentPane().add(logoutButton);
 		
 		JButton ShoppingPageButton = new JButton("Shopping page");
@@ -96,7 +96,19 @@ public class ManagerPage {
 			}
 		});
 		modifyItemsButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		modifyItemsButton.setBounds(23, 239, 156, 40);
+		modifyItemsButton.setBounds(23, 240, 156, 40);
 		ManagerPage.getContentPane().add(modifyItemsButton);
+		
+		JButton pendingOrdersButton = new JButton("Pending Orders");
+		pendingOrdersButton.setBounds(23, 298, 156, 40);
+        pendingOrdersButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
+        ManagerPage.getContentPane().add(pendingOrdersButton);
+        pendingOrdersButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                PendingOrdersPage POP = new PendingOrdersPage();
+                POP.PendingOrderPage.setVisible(true);
+                ManagerPage.dispose();
+            }
+        });
 	}
 }

@@ -136,7 +136,7 @@ public class EmpItemPage {
 				}
         	}
         });
-        changePriceButton.setBounds(567, 293, 100, 23);
+        changePriceButton.setBounds(567, 293, 117, 23);
         EmpItemPage.getContentPane().add(changePriceButton);
         
         newItemPriceLabel = new JLabel("New Item Price");

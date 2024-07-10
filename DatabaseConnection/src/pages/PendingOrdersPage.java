@@ -23,6 +23,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.Font;
+import java.awt.Button;
 
 public class PendingOrdersPage {
 
@@ -163,7 +164,27 @@ public class PendingOrdersPage {
             }
         });
 		
-		
+        JButton refreshButton = new JButton("Refresh");
+        refreshButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		PendingOrderPage.dispose();
+        		PendingOrdersPage POP = new PendingOrdersPage();
+        		POP.PendingOrderPage.setVisible(true);
+        	}
+        });
+        refreshButton.setBounds(714, 34, 89, 23);
+        PendingOrderPage.getContentPane().add(refreshButton);
+        
+        JButton logoutButton = new JButton("logout");
+        logoutButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		LoginPage LP = new LoginPage();
+        		LP.LoginPage.setVisible(true);
+        		PendingOrderPage.dispose();
+        	}
+        });
+        logoutButton.setBounds(810, 34, 89, 23);
+        PendingOrderPage.getContentPane().add(logoutButton);
 		
 	}
 	

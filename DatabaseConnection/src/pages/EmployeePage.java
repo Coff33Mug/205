@@ -59,7 +59,7 @@ public class EmployeePage {
 				employeePage.dispose();
 			}
 		});
-		logoutButton.setBounds(23, 294, 156, 40);
+		logoutButton.setBounds(23, 303, 156, 40);
 		employeePage.getContentPane().add(logoutButton);
 		
 		JButton ShoppingPageButton = new JButton("Shopping page");
@@ -86,6 +86,17 @@ public class EmployeePage {
 		modifyItemsButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		modifyItemsButton.setBounds(23, 179, 156, 40);
 		employeePage.getContentPane().add(modifyItemsButton);
+		
+		JButton pendingOrdersButton = new JButton("Pending Orders");
+		pendingOrdersButton.setBounds(23, 241, 156, 40);
+        pendingOrdersButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
+        employeePage.getContentPane().add(pendingOrdersButton);
+        pendingOrdersButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                PendingOrdersPage POP = new PendingOrdersPage();
+                POP.PendingOrderPage.setVisible(true);
+                employeePage.dispose();
+            }
+        });
 	}
-
 }
