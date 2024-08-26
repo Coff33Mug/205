@@ -94,9 +94,9 @@ public class LoginPage {
 		IncorrectLabel.setBounds(66, 225, 417, 41);
 		LoginPage.getContentPane().add(IncorrectLabel);
 		
-		JButton btnNewButton = new JButton("Login");
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton LoginButton = new JButton("Login");
+		LoginButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		LoginButton.addActionListener(new ActionListener() {
 			
 			// Checks database for information of login
 			public void actionPerformed(ActionEvent e) {
@@ -155,20 +155,20 @@ public class LoginPage {
 			}
 		});
 		
-		btnNewButton.setBounds(21, 273, 184, 58);
-		LoginPage.getContentPane().add(btnNewButton);
+		LoginButton.setBounds(21, 273, 184, 58);
+		LoginPage.getContentPane().add(LoginButton);
 		
-		JButton btnNewButton_1 = new JButton("Register");
-		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		btnNewButton_1.addActionListener(new ActionListener() {
+		JButton RegisterButton = new JButton("Register");
+		RegisterButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		RegisterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RegisterPage RP = new RegisterPage();
 				RP.RegisterPage.setVisible(true);
 				LoginPage.dispose();
 			}
 		});
-		btnNewButton_1.setBounds(330, 273, 184, 58);
-		LoginPage.getContentPane().add(btnNewButton_1);
+		RegisterButton.setBounds(330, 273, 184, 58);
+		LoginPage.getContentPane().add(RegisterButton);
 		
 		
 		
