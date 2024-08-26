@@ -73,7 +73,7 @@ public class CheckoutPage {
             int totalItems = 0;
             for (Item item : cart) {
                 totalItems += item.getQuantity();
-                DB.checkoutAddItem(item.getName(), item.getQuantity(), item.getID());
+                DB.pendingAddItem(item.getName(), item.getQuantity(), item.getID());
             }
             JOptionPane.showMessageDialog(CheckoutPage, "Your order for " + totalItems + " items was completed successfully.");
             cart.clear();

@@ -90,7 +90,7 @@ public class ShoppingPage {
 			int databaseID = DB.getUserID();
 				
 			if (databaseID == DB.getUserID()) {
-				ResultSet CheckoutRS = stmt.executeQuery("SELECT itemname, quantity, price FROM public.checkout WHERE userID = " + databaseID + ";");
+				ResultSet CheckoutRS = stmt.executeQuery("SELECT itemname, quantity, price FROM public.cart WHERE userID = " + databaseID + ";");
 				while (CheckoutRS.next()) {
 					String itemName = CheckoutRS.getString("itemname");
 					int quantity = CheckoutRS.getInt("quantity");
@@ -236,6 +236,7 @@ public class ShoppingPage {
                     JOptionPane.showMessageDialog(ShoppingPage, "Bro your cart is empty.");
                 } else {
                 	cart.clear();
+                	DB.cartDeleteItems();
             		cartList.setListData(cart.toArray(new Item[0]));
             		JOptionPane.showMessageDialog(ShoppingPage, "Cart cleared.");
                 }
@@ -262,6 +263,7 @@ public class ShoppingPage {
                 int quantity = Integer.parseInt(quantityField.getText());
                 if (quantity > 0) {
                     cart.add(new Item(selectedItem.getName(), quantity, selectedItem.getPrice(), 0));
+                    DB.addCartItem(selectedItem.getName(), quantity, selectedItem.getID());
                     cartList.setListData(cart.toArray(new Item[0]));
                     JOptionPane.showMessageDialog(ShoppingPage, "Item added to cart!");
                 } else {
@@ -286,7 +288,7 @@ public class ShoppingPage {
             for (Item item : cart) {
                 totalItems += item.getQuantity();
                 totalPrice += item.getPrice();
-                DB.checkoutAddItem(item.getName(), item.getQuantity(), item.getID());
+                DB.pendingAddItem(item.getName(), item.getQuantity(), item.getID());
             }
             JOptionPane.showMessageDialog(ShoppingPage, "Your order for " + totalItems + " items was completed for " + totalPrice);
             cart.clear();
