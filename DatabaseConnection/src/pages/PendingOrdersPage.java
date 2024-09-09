@@ -62,7 +62,7 @@ public class PendingOrdersPage {
         
         try {
 			Statement stmt = DB.getConnection().createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT itemname, quantity, price, orderfilled FROM public.checkout;");
+			ResultSet rs = stmt.executeQuery("SELECT itemname, quantity, price, orderfilled FROM public.pending;");
 			
 			while (rs.next()) {
 				Boolean orderFilled = rs.getBoolean("orderfilled");
@@ -195,7 +195,7 @@ public class PendingOrdersPage {
         
         try {
 			Statement stmt = DB.getConnection().createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT itemname, userid, orderid, orderfilled, quantity, price FROM public.checkout;");
+			ResultSet rs = stmt.executeQuery("SELECT itemname, userid, orderid, orderfilled, quantity, price FROM public.pending;");
 			
 			while (rs.next()) {
 				String itemName = rs.getString("itemname");
@@ -236,7 +236,7 @@ public class PendingOrdersPage {
 		System.out.println(selectedItem.getID());
 		if (selectedItem != null) {
 			try {
-				PreparedStatement stmt = DB.getConnection().prepareStatement("UPDATE public.checkout SET orderfilled = true WHERE orderid =? OR userid =?");
+				PreparedStatement stmt = DB.getConnection().prepareStatement("UPDATE public.pending SET orderfilled = true WHERE orderid =? OR userid =?");
 				stmt.setInt(1, selectedItem.getID());
 				stmt.setInt(2, selectedItem.getID());
 				stmt.executeUpdate();
@@ -262,7 +262,7 @@ public class PendingOrdersPage {
 		System.out.println(selectedItem.getID());
 		if (selectedItem != null) {
 			try {
-				PreparedStatement stmt = DB.getConnection().prepareStatement("UPDATE public.checkout SET orderfilled = false WHERE orderid =? OR userid =?");
+				PreparedStatement stmt = DB.getConnection().prepareStatement("UPDATE public.pending SET orderfilled = false WHERE orderid =? OR userid =?");
 				stmt.setInt(1, selectedItem.getID());
 				stmt.setInt(2, selectedItem.getID());
 				stmt.executeUpdate();

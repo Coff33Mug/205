@@ -272,7 +272,7 @@ public class Database {
 		}
 		
 		// Checkout item modifications
-		public void checkoutAddItem(String inputItemName, int inputQuantity, int inputItemID) {
+		public void pendingAddItem(String inputItemName, int inputQuantity, int inputItemID) {
 			
 			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
 			try {
@@ -286,7 +286,7 @@ public class Database {
 					
 					if (inputItemName.toLowerCase().equals(name) || inputItemID == itemID) {
 						PreparedStatement prestmt = c.prepareStatement(
-								"INSERT INTO public.checkout(orderid, userid, itemname, quantity, price, orderfilled) VALUES(DEFAULT,?,?,?,?, false)");
+								"INSERT INTO public.pending(orderid, userid, itemname, quantity, price, orderfilled) VALUES(DEFAULT,?,?,?,?, false)");
 						prestmt.setInt(1, userID);
 						prestmt.setString(2, name);
 						prestmt.setInt(3, inputQuantity);
@@ -307,18 +307,18 @@ public class Database {
 			}
 		}
 		
-		public void checkoutDeleteItem(int inputUserID, int inputOrderID) {
+		public void pendingDeleteItem(int inputUserID, int inputOrderID) {
 			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
 			try {
 		    Statement stmt = getConnection().createStatement();
-		    ResultSet rs = stmt.executeQuery("SELECT orderid, userid FROM public.checkout;");
+		    ResultSet rs = stmt.executeQuery("SELECT orderid, userid FROM public.pending;");
 
 		    while (rs.next()) {
 		        int databaseOrderID = rs.getInt("orderid");
 		        int databaseUserID = rs.getInt("userid");
 		        
 		        if (inputUserID == databaseUserID || databaseOrderID == inputOrderID) {
-		            PreparedStatement prestmt = getConnection().prepareStatement("DELETE FROM public.checkout WHERE orderid =? OR userid =?");
+		            PreparedStatement prestmt = getConnection().prepareStatement("DELETE FROM public.pending WHERE orderid =? OR userid =?");
 		            prestmt.setInt(1, databaseOrderID);
 		            prestmt.setInt(2, databaseUserID);
 		            prestmt.executeUpdate();
@@ -333,11 +333,11 @@ public class Database {
 			
 		}
 		
-		public void checkoutUpdateItemQuantity(int inputUserID, int inputOrderID, int inputQuantity) {
+		public void pendingUpdateItemQuantity(int inputUserID, int inputOrderID, int inputQuantity) {
 			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
 			try {
 		    Statement stmt = getConnection().createStatement();
-		    ResultSet rs = stmt.executeQuery("SELECT orderid, userid, itemname FROM public.checkout;");
+		    ResultSet rs = stmt.executeQuery("SELECT orderid, userid, itemname FROM public.pending;");
 
 		    while (rs.next()) {
 		        int databaseOrderID = rs.getInt("orderid");
@@ -345,7 +345,7 @@ public class Database {
 		        String databaseItemName = rs.getString("itemname");
 		        
 		        if (inputUserID == databaseUserID || databaseOrderID == inputOrderID) {
-		            PreparedStatement prestmt = getConnection().prepareStatement("UPDATE public.checkout SET quantity =?, price =? WHERE orderid =? OR userid =?");
+		            PreparedStatement prestmt = getConnection().prepareStatement("UPDATE public.pending SET quantity =?, price =? WHERE orderid =? OR userid =?");
 		            prestmt.setInt(1, inputQuantity);
 		            // Second parameter of getItemPrice is 0 because databaseItemName should be correct
 		            // making another ID unnecessary
@@ -363,12 +363,12 @@ public class Database {
 			}
 		}
 		
-		public int getCheckoutCount(int inputUserID) {
+		public int getPendingCount(int inputUserID) {
 			int count = 0;
 			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
 			try {
 		    Statement stmt = getConnection().createStatement();
-		    ResultSet rs = stmt.executeQuery("SELECT userid FROM public.checkout;");
+		    ResultSet rs = stmt.executeQuery("SELECT userid FROM public.pending;");
 
 		    while (rs.next()) {
 		        int databaseUserID = rs.getInt("userid");
@@ -384,12 +384,12 @@ public class Database {
 			return count;
 		}
 		
-		public double getCheckoutTotalPrice(int inputUserID) {
+		public double getPendingTotalPrice(int inputUserID) {
 			double totalPrice = 0;
 			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
 			try {
 		    Statement stmt = getConnection().createStatement();
-		    ResultSet rs = stmt.executeQuery("SELECT userid, price FROM public.checkout;");
+		    ResultSet rs = stmt.executeQuery("SELECT userid, price FROM public.pending;");
 
 		    while (rs.next()) {
 		        int databaseUserID = rs.getInt("userid");
@@ -403,5 +403,65 @@ public class Database {
 				e1.printStackTrace();
 			}
 			return totalPrice;
+		}
+		
+		// Cart methods
+		
+		public void addCartItem(String inputItemName, int inputQuantity, int inputItemID) {
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
+			try {
+				Statement stmt = getConnection().createStatement();
+				ResultSet rs = stmt.executeQuery("select id, name, price from public.items;");
+				
+				while (rs.next()) {
+					int itemID = rs.getInt("id");
+					String name = rs.getString("name");
+					double price = rs.getDouble("price");
+					
+					if (inputItemName.toLowerCase().equals(name) || inputItemID == itemID) {
+						PreparedStatement prestmt = c.prepareStatement(
+								"INSERT INTO public.cart(orderid, userid, itemname, quantity, price) VALUES(DEFAULT,?,?,?,?)");
+						prestmt.setInt(1, userID);
+						prestmt.setString(2, name);
+						prestmt.setInt(3, inputQuantity);
+						prestmt.setDouble(4, price * inputQuantity);
+						prestmt.executeUpdate();
+						System.out.print("Added item");
+						stmt.close();
+						c.close();
+						break;
+					}
+				}
+				
+				
+			} catch (SQLException e1) {
+				System.out.print("item not found");
+				e1.printStackTrace();
+				
+			}
+		}
+		
+		public void cartDeleteItems() {
+			Connect("jdbc:postgresql://localhost:5432/shopping", "postgres", "password");
+			try {
+		    Statement stmt = getConnection().createStatement();
+		    ResultSet rs = stmt.executeQuery("SELECT userid FROM public.cart;");
+
+		    while (rs.next()) {
+		        int databaseUserID = rs.getInt("userid");
+		        
+		        if (userID == databaseUserID) {
+		            PreparedStatement prestmt = getConnection().prepareStatement("DELETE FROM public.cart WHERE userid =?");
+		            prestmt.setInt(1, databaseUserID);
+		            prestmt.executeUpdate();
+		            System.out.print("Cart cleared");
+		            break;
+		        	}
+		    	}
+			} catch (SQLException e1) {
+				System.out.print("Cart is empty");
+				e1.printStackTrace();
+			}
+			
 		}
 }
